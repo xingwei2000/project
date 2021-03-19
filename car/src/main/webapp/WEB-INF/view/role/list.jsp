@@ -34,6 +34,7 @@
            </div>
         </form>
     </blockquote>
+
     <%--数据表格--%>
     <div>
         <table id="dataTable" lay-filter="dataTableFilter"></table>
@@ -48,7 +49,7 @@
 
     <%--行按钮操作--%>
     <script type="text/html" id="rowBtns">
-        <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="resetPwd">
+        <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="edit">
             <i class="layui-icon layui-icon-edit"></i>修改
         </button>
         <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="add">
@@ -58,7 +59,7 @@
 
     <%--新增角色模板--%>
     <script type="text/html" id="addRoleTpl">                                                                                                                                                                                                                     ">
-        <form class="layui-form layui-form-pane" style="margin: 10px;">
+        <form class="layui-form layui-form-pane" lay-filter="editFormFilter" style="margin: 10px;">
             <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">角色名</label>
@@ -145,6 +146,15 @@
           }
         });
 
+        // 表格头工具栏监听事件
+        table.on("tool(dataTableFilter)",function (d) {
+            let event = d.event ;
+            let rowData = d.data ;
+            if (event == "edit"){
+                edit(rowData) ;
+            }
+        });
+
         /**
          * 添加角色的方法
          */
@@ -175,6 +185,39 @@
                 btnAlign:'c'
             }
 
+            layer.open(layerIns) ;
+        }
+
+        function edit(rowData) {
+            let layerIns = {
+                title:"新增角色",
+                type: 1,
+                content:$("#addRoleTpl").html(),
+                area:['450px','450px'],
+                success:function (layero,index) {
+                    // 表单赋值
+                    form.val("editFormFilter",rowData) ;
+                    form.on('submit(submitFilter)',function (d) {
+                        let formData = d.field ;
+                        formData.id = rowData.id ;
+                        $.post(cxt + "/role/update.do",formData,function (rs) {
+                            if (rs.code != 200){
+                                layer.msg(rs.msg) ;// 展示业务消息
+                                return ;
+                            }
+                            layer.msg(rs.msg) ;
+                            layer.close(index) // 关闭弹层
+                            $("#searchBtn").click() ;
+                        })
+                        return false ;
+                    })
+                },
+                yes:function (index,layero) {
+                    $("#subBtn").click() ;
+                },
+                btn:["确定","取消"],
+                btnAlign:'c'
+            }
             layer.open(layerIns) ;
         }
 

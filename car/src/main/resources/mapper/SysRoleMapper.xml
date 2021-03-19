@@ -30,4 +30,10 @@
         value (#{name}, #{tag}, #{descp})
    </insert>
 
+   <update id="update">
+        update sys_role
+        set name = #{name},tag = #{tag},descp = #{descp}
+        where id = #{id}
+    </update>
+
 </mapper>

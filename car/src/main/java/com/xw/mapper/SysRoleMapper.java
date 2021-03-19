@@ -20,4 +20,10 @@ public interface SysRoleMapper {
      * @param busRoleForm
      */
     void insert(BusRoleForm busRoleForm);
+
+    /**
+     * 修改角色信息
+     * @param busRoleForm
+     */
+    void update(BusRoleForm busRoleForm);
 }

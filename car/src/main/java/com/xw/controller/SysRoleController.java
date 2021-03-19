@@ -35,5 +35,10 @@ public class SysRoleController {
         return sysRoleService.add(busRoleForm) ;
     }
 
+    @RequestMapping("update.do")
+    public Object update(BusRoleForm busRoleForm){
+        return sysRoleService.update(busRoleForm) ;
+    }
+
 
 }

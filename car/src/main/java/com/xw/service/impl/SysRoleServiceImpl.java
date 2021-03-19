@@ -29,4 +29,10 @@ public class SysRoleServiceImpl implements SysRoleService {
         sysRoleMapper.insert(busRoleForm) ;
         return new Result();
     }
+
+    @Override
+    public Result update(BusRoleForm busRoleForm) {
+        sysRoleMapper.update(busRoleForm) ;
+        return new Result();
+    }
 }

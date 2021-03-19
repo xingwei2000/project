@@ -18,4 +18,11 @@ public interface SysRoleService{
      * @return
      */
     Result add(BusRoleForm busRoleForm);
+
+    /**
+     * 修改角色信息
+     * @param busRoleForm
+     * @return
+     */
+    Result update(BusRoleForm busRoleForm);
 }
