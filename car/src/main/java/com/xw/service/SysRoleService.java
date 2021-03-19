@@ -1,12 +1,13 @@
 package com.xw.service;
 
-import org.springframework.stereotype.Service;
-import javax.annotation.Resource;
-import com.xw.mapper.SysRoleMapper;
-@Service
-public class SysRoleService{
+import com.xw.common.Result;
+import com.xw.query.BusRoleQuery;
 
-    @Resource
-    private SysRoleMapper sysRoleMapper;
-
+public interface SysRoleService{
+    /**
+     *
+     * @param busRoleQuery
+     * @return
+     */
+    Result query(BusRoleQuery busRoleQuery);
 }

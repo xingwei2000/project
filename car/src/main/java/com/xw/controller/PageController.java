@@ -65,4 +65,9 @@ public class PageController {
         return "return/list" ;
     }
 
+    @RequestMapping("role/list.do")
+    public String roleList(){
+        return "role/list" ;
+    }
+
 }

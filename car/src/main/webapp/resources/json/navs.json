@@ -52,7 +52,7 @@
 				{
 					"title": "角色管理",
 					"icon": "&#xe613;",
-					"href": "page/404.html",
+					"href": "role/list.do",
 					"spread": true,
 					"target": "_self"
 				},
