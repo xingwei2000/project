@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.xw.common.Result;
 import com.xw.domain.SysRole;
+import com.xw.form.BusRoleForm;
 import com.xw.mapper.SysRoleMapper;
 import com.xw.query.BusRoleQuery;
 import com.xw.service.SysRoleService;
@@ -21,5 +22,11 @@ public class SysRoleServiceImpl implements SysRoleService {
         Page<SysRole> sysRoles = PageHelper.startPage(busRoleQuery.getPage(), busRoleQuery.getLimit());
         sysRoleMapper.queryPage(busRoleQuery) ;
         return new Result(sysRoles.toPageInfo());
+    }
+
+    @Override
+    public Result add(BusRoleForm busRoleForm) {
+        sysRoleMapper.insert(busRoleForm) ;
+        return new Result();
     }
 }

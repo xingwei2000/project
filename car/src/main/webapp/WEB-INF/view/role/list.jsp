@@ -56,6 +56,37 @@
         </button>
     </script>
 
+    <%--新增角色模板--%>
+    <script type="text/html" id="addRoleTpl">                                                                                                                                                                                                                     ">
+        <form class="layui-form layui-form-pane" style="margin: 10px;">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">角色名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" placeholder="角色名" lay-reqText="请输入角色名" lay-verify="required" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">角色标识</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="tag" placeholder="角色标识" lay-reqText="请输入角色标识" lay-verify="required" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">描述</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="descp" placeholder="描述" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <button class="layui-btn" style="display: none;" id="subBtn" lay-submit lay-filter="submitFilter"></button>
+        </form>
+    </script>
+
 </body>
 </html>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/layui/layui.js"></script>
@@ -77,6 +108,7 @@
             toolbar: "#headBtns", // 头工具栏
             cols:[[
                 {type:"checkbox"},
+                {field:"id",title: "ID"},
                 {field:"name",title:"角色名"},
                 {field:"tag",title:"角色标识"},
                 {field:"descp",title:"描述",minWidth:300},
@@ -108,8 +140,43 @@
         // 表格头工具栏监听事件
         table.on("toolbar(dataTableFilter)",function (d) {
           let event = d.event ;
-
+          if (event == "add"){
+              add() ;
+          }
         });
+
+        /**
+         * 添加角色的方法
+         */
+        function add() {
+            let layerIns = {
+                title:"新增角色",
+                type: 1,
+                content:$("#addRoleTpl").html(),
+                area:['450px','450px'],
+                success:function (layero,index) {
+                    form.on('submit(submitFilter)',function (d) {
+                        let formData = d.field ;
+                        $.post(cxt + "/role/add.do",formData,function (rs) {
+                            if (rs.code!=200){
+                                layer.msg(rs.msg) ;// 展示业务消息
+                                return ;
+                            }
+                            layer.msg(rs.msg) ;
+                            layer.close(index) // 关闭弹层
+                            $("#searchBtn").click() ;
+                        })
+                    })
+                },
+                yes:function (index,layero) {
+                    $("#subBtn").click() ;
+                },
+                btn:["确定","取消"],
+                btnAlign:'c'
+            }
+
+            layer.open(layerIns) ;
+        }
 
     })
 </script>

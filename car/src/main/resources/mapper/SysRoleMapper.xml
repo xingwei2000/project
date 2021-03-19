@@ -24,4 +24,10 @@
       </where>
   </select>
 
+  <insert id="insert">
+        insert into
+            sys_role(`name`, tag, descp)
+        value (#{name}, #{tag}, #{descp})
+   </insert>
+
 </mapper>

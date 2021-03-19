@@ -1,6 +1,7 @@
 package com.xw.mapper;
 
 import com.xw.domain.SysRole;
+import com.xw.form.BusRoleForm;
 import com.xw.query.BusRoleQuery;
 
 import java.util.List;
@@ -14,5 +15,9 @@ public interface SysRoleMapper {
      */
     List<SysRole> queryPage(BusRoleQuery busRoleQuery);
 
-
+    /**
+     * 新增角色信息
+     * @param busRoleForm
+     */
+    void insert(BusRoleForm busRoleForm);
 }
