@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+
+    <context:component-scan base-package="com.xw"/>
+
+    <context:property-placeholder location="classpath:db.properties" system-properties-mode="FALLBACK"/>
+
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!--配置mybatis-->
+    <bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--配置数据源-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--加载mapper.xml文件-->
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+        <!--设置别名-->
+        <property name="typeAliasesPackage" value="com.xw.domain"/>
+        <!--插件-->
+        <property name="plugins">
+            <array>
+                <!--分页插件-->
+                <bean class="com.github.pagehelper.PageInterceptor"/>
+            </array>
+        </property>
+    </bean>
+
+    <!--扫描所有指定的mapper 产生的代理实现类 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--所有mapper的接口包-->
+        <property name="basePackage" value="com.xw.mapper"/>
+        <!--注入sqlSessionFactoryBean作为代理对象-->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryBean"/>
+    </bean>
+
+    <!--配置事务-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!--外部引入shiro的配置-->
+    <import resource="classpath:shiro.xml"/>
+
+</beans>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xw.mapper.BusCarMapper">
+
+  <resultMap id="BaseResultMap" type="com.xw.vo.BusCarVO">
+    <id column="id" property="id" />
+    <result column="car_num" property="carNum" />
+    <result column="type" property="type" />
+    <result column="color" property="color" />
+    <result column="price" property="price" />
+    <result column="rent_price" property="rentPrice" />
+    <result column="deposity" property="deposity" />
+    <result column="is_rent" property="isRent" />
+    <result column="descp" property="descp" />
+    <result column="img" property="img" />
+    <result column="version" property="version" />
+    <result column="create_time" property="createTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, car_num, `type`, color, price, rent_price, deposity, is_rent, descp, img, version,
+    create_time
+  </sql>
+
+  <select id="queryPage" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from bus_car
+        <where>
+            <if test="carNum != null and carNum != ''">
+               and car_num like concat('%',#{carNum},'%')
+            </if>
+            <if test="type != null and type!=''">
+               and type = #{type}
+            </if>
+            <if test="color != null and color != ''">
+              and  color like concat('%',#{color},'%')
+            </if>
+            <if test="minPrice != null and minPrice != ''">
+              and  price >= #{minPrice}
+            </if>
+             <if test="maxPrice != null and maxPrice != ''">
+              and #{maxPrice} >=  price
+            </if>
+            <if test="minRentPrice != null and minRentPrice!=''">
+               and rent_price >= #{minRentPrice}
+            </if>
+             <if test="maxRentPrice != null and maxRentPrice != ''">
+              and #{maxRentPrice} >=  rent_price
+            </if>
+            <if test="descp != null and descp != ''">
+              and  descp like concat('%',#{descp},'%')
+            </if>
+            <if test="isRent != null and isRent!=''">
+               and is_rent = #{isRent}
+            </if>
+        </where>
+   </select>
+
+
+   <select id="selectOneByCarNum" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from bus_car where car_num = #{carNum}
+   </select>
+
+   <insert id="insert">
+    insert into
+        bus_car
+        (car_num, `type`, color, price, rent_price, deposity, descp, img)
+    value
+        (#{carNum}, #{type}, #{color}, #{price}, #{rentPrice}, #{deposity}, #{descp}, #{img})
+   </insert>
+
+   <update id="update">
+        update bus_car
+        set is_rent = #{isRent},version = version + 1
+        where id = #{id} and version = #{version}
+   </update>
+
+</mapper>

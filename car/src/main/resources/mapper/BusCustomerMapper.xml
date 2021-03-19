@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xw.mapper.BusCustomerMapper">
+    <resultMap id="BaseResultMap" type="com.xw.vo.BusCustomerVO">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="phone" property="phone"/>
+        <result column="address" property="address"/>
+        <result column="id_card" property="idCard"/>
+        <result column="sex" property="sex"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, `name`, phone, address, id_card, sex, create_time,update_time
+    </sql>
+
+    <select id="queryPge" parameterType="com.xw.query.BusCustomerQuery" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from bus_customer
+        <where>
+            <if test="name != null and name != ''">
+               and `name` like concat('%',#{name},'%')
+            </if>
+            <if test="phone != null and phone != ''">
+                and phone = #{phone}
+            </if>
+            <if test="address != null and address != ''">
+                and address like concat('%',#{address},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectCustomerByPhoneAndIdCard" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+            from bus_customer
+        <where>
+            <if test="phone != null and phone != ''">
+                and phone = #{phone}
+            </if>
+            <if test="idCard != null and idCard != ''">
+                and id_card = #{idCard}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert">
+        insert into
+            bus_customer(`name`, phone, address, id_card, sex)
+        value
+            (#{name},#{phone},#{address},#{idCard},#{sex})
+    </insert>
+
+
+    <update id="update">
+        update bus_customer
+        set `name` = #{name},phone = #{phone},address=#{address},id_card = #{idCard},sex = #{sex}
+        where id = #{id}
+    </update>
+
+
+    <insert id="batchInsert">
+        insert into bus_customer(`name`, phone, address, id_card, sex)
+            values
+        <foreach collection="customers" item="customer" separator=",">
+            (#{customer.name},#{customer.phone},#{customer.address},#{customer.idCard},#{customer.sex})
+        </foreach>
+    </insert>
+
+</mapper>

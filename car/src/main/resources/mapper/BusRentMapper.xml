@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xw.mapper.BusRentMapper">
+
+  <resultMap id="BaseResultMap" type="com.xw.vo.BusRentVO">
+    <id column="id" property="id" />
+    <result column="car_num" property="carNum" />
+    <result column="type" property="type" />
+    <result column="rent_price" property="rentPrice" />
+    <result column="deposity" property="deposity" />
+    <result column="name" property="name" />
+    <result column="id_card" property="idCard" />
+    <result column="begin_time" property="beginTime" />
+    <result column="end_time" property="endTime" />
+    <result column="flag" property="flag" />
+    <result column="user_id" property="userId" />
+    <result column="create_time" property="createTime" />
+    <result column="update_time" property="updateTime" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, car_num, `type`, rent_price, deposity, `name`, id_card, begin_time, end_time,
+    flag, user_id, create_time, update_time
+  </sql>
+
+  <insert id="insert">
+    insert into
+        bus_rent(car_num, `type`, rent_price, deposity, `name`, id_card, begin_time, end_time,user_id)
+    value (#{carNum}, #{type}, #{rentPrice}, #{deposity}, #{name},#{idCard}, #{beginTime}, #{endTime},#{userId})
+  </insert>
+
+  <select id="queryPage" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+            from bus_rent
+        <where>
+           <if test="carNum != null and carNum != ''">
+            and car_num like concat('%',#{carNum},'%')
+            </if>
+            <if test="name != null and name != ''">
+              and  name like concat('%',#{name},'%')
+            </if>
+            <if test="minBeginTime != null and minBeginTime != ''">
+               and begin_time >= #{minBeginTime}
+            </if>
+            <if test="maxBeginTime != null and maxBeginTime != ''">
+              and  #{maxBeginTime} >= begin_time
+            </if>
+            <if test="flag != null and flag != ''">
+              and  flag = #{flag}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="selectOne" resultMap="BaseResultMap">
+     select <include refid="Base_Column_List"/>
+     from bus_rent
+     where id = #{rentId}
+    </select>
+
+    <update id="updateRentFlag">
+        update bus_rent
+        set flag = #{flag}
+        where id = #{rentId} and flag = #{oldFlag}
+    </update>
+
+
+</mapper>
