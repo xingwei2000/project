@@ -29,12 +29,22 @@ public class SysRoleController {
         return sysRoleService.query(busRoleQuery) ;
     }
 
+    /**
+     * 添加用户角色
+     * @param busRoleForm
+     * @return
+     */
     @RequestMapping("add.do")
     public Object add(BusRoleForm busRoleForm){
         ValidatorUtil.validator(busRoleForm);
         return sysRoleService.add(busRoleForm) ;
     }
 
+    /**
+     * 修改用户角色
+     * @param busRoleForm
+     * @return
+     */
     @RequestMapping("update.do")
     public Object update(BusRoleForm busRoleForm){
         return sysRoleService.update(busRoleForm) ;
