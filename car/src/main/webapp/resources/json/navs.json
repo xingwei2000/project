@@ -39,7 +39,7 @@
 		{
 			"title": "系统管理",
 			"icon": "&#xe716;",
-			"href": "page/img/images.html",
+			"href": "",
 			"spread": true,
 			"children": [
 				{
@@ -59,7 +59,7 @@
 				{
 					"title": "权限管理",
 					"icon": "&#xe672;",
-					"href": "page/login/login.html",
+					"href": "",
 					"spread": true,
 					"target": "_self"
 				}

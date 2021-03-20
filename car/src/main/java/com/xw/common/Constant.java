@@ -39,5 +39,17 @@ public interface Constant {
      * 车辆已还车
      */
     Integer CAR_RETURN_ED = 2 ;
+    /**
+     * 菜单权限 1
+     */
+    Integer PERMISSION_TYPE_MENU = 1;
+    /**
+     * 按钮权限 2
+     */
+    Integer PERMISSION_TYPE_BUTTON = 2;
+    /**
+     * 一级菜单
+     */
+    Integer MENU_LV1 = 0 ;
 
 }
