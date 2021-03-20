@@ -6,7 +6,10 @@ import com.xw.query.BusRoleQuery;
 import com.xw.service.SysRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 角色处理器
@@ -47,7 +50,27 @@ public class SysRoleController {
      */
     @RequestMapping("update.do")
     public Object update(BusRoleForm busRoleForm){
+        ValidatorUtil.validator(busRoleForm);
         return sysRoleService.update(busRoleForm) ;
+    }
+
+    /**
+     * @return
+     */
+    @RequestMapping("all.do")
+    public Object all(){
+        return sysRoleService.queryAll() ;
+    }
+
+
+    @RequestMapping("userRoles.do")
+    public Object userRoles(@RequestParam("userId") Integer userId){
+        return sysRoleService.queryUseRoleByID(userId) ;
+    }
+
+    @RequestMapping("setRole.do")
+    public Object setRole(@RequestParam("userId") Integer userId, @RequestParam("roleId")List<Integer> roleId){
+        return sysRoleService.insertUserRoles(userId,roleId) ;
     }
 
 

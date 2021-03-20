@@ -10,6 +10,9 @@ import com.xw.query.BusRoleQuery;
 import com.xw.service.SysRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class SysRoleServiceImpl implements SysRoleService {
@@ -33,6 +36,28 @@ public class SysRoleServiceImpl implements SysRoleService {
     @Override
     public Result update(BusRoleForm busRoleForm) {
         sysRoleMapper.update(busRoleForm) ;
+        return new Result();
+    }
+
+    @Override
+    public Result queryAll() {
+        BusRoleQuery busRoleQuery = new BusRoleQuery();
+        return new Result( sysRoleMapper.queryPage(busRoleQuery));
+    }
+
+    @Override
+    public Result queryUseRoleByID(Integer userId) {
+        List<SysRole> roles = sysRoleMapper.selectListByUserId(userId) ;
+        return new Result(roles);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Result insertUserRoles(Integer userId, List<Integer> roleId) {
+        // 删除用户的所有角色关系
+        sysRoleMapper.deleteUserRole(userId) ;
+        // 新增
+        sysRoleMapper.batchInsertRoles(userId,roleId);
         return new Result();
     }
 }

@@ -66,7 +66,7 @@
         <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="resetPwd">
             <i class="layui-icon layui-icon-refresh-3"></i>重置密码
         </button>
-        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="add">
+        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="setRoles">
             <i class="layui-icon layui-icon-user"></i>设置角色
         </button>
     </script>
@@ -118,6 +118,13 @@
                 </div>
             </div>
             <button class="layui-btn" style="display: none;" id="subBtn" lay-submit lay-filter="submitFilter"></button>
+        </form>
+    </script>
+
+    <%--设置角色的模板--%>
+    <script type="text/html" id="setRoleTpl">
+        <form class="layui-form layui-form-pane" style="padding-left: 20px; padding-top: 30px;" id="allRoles">
+            <button id="subBtn" style="display: none" lay-submit lay-filter="submitBtnFilter"></button>
         </form>
     </script>
 
@@ -207,6 +214,8 @@
             let rowData = d.data ;
             if (event=="resetPwd"){
                 resetPwd(rowData);
+            }else if(event == "setRoles"){
+                setRoles(rowData) ;
             }
         })
 
@@ -279,5 +288,102 @@
                 photos: imgData
             });
         };
+
+
+        function setRoles(rowData) {
+            let layerIns = {
+                title:"用户角色管理",
+                type: 1,
+                content:$("#setRoleTpl").html(),
+                area:['400px','400px'],
+                success:function (layero,index) {
+                    //1、获取所有的额角色
+                    /**
+                     *  <div class="layui-form-item">
+                            <div class="layui-input-inline" style="width: 250px;">
+                                 <input type="checkbox" lay-skin="primary" title="管理员">
+                                <input type="checkbox" lay-skin="primary" title="管理员">
+                            </div>
+                         </div>
+                     */
+                    $.get(cxt + "/role/all.do",function (rs) { // 2条 3条
+                        // 所有的角色
+                        let roles = rs.data ;
+                        // 角色容器
+                        let rolesContent = $("#allRoles") ;
+                        let header = '<div class="layui-form-item"> <div class="layui-input-inline" style="width: 250px;">'
+                        let footer = '</div> </div>'
+                        let content = "" ;
+                        // 循环拼接 所有的额角色
+                        for (let i=0;i<roles.length;i++){
+                            let role = roles[i] ;
+                            let id = role.id ;
+                            let name = role.name ;
+                            let body = '<input id="checkbox'+id+'" type="checkbox" name="roleId" value="'+id+'" title="'+name+'">' ;
+                            //  第一次循环拼接头
+                            if (i%2 == 0){
+                                content = content + header ;
+                            }
+                            content = content + body ;
+                            //  第二次循环拼接尾
+                           if (i%2==1){
+                               content = content + footer ;
+                           }
+                        }
+                        if (roles.length%2 !=0){
+                            content = content + footer ;
+                        }
+                        rolesContent.append(content) ;
+                        form.render("checkbox") ;
+
+                        $.get(cxt +"/role/userRoles.do",{userId:rowData.id},function(rs) {
+                            debugger ;
+                            // 获取当前用户的所有角色
+                            let userRoles = rs.data ;
+                            // true 有角色 有角色选中角色
+                            if (userRoles){
+                                for (roles of userRoles) {
+                                    let id = roles.id ;
+                                    let checkboxId = "checkbox" + id ;
+                                    // 选中这个id 对应的CheckBox 设置为check
+                                    // 属性选择器 value=id
+                                    $("#"+checkboxId).prop("checked",true) ;
+                                }
+                            }
+                            form.render("checkbox");
+                        });
+                    })
+                    form.on('submit(submitBtnFilter)',function (d) {
+                        let checkBox = $("#allRoles :checked") ;
+
+                        let roleIds = new  Array() ;
+                        $.each(checkBox,function (index,object) {
+                            let roleId = $(object).val() ;
+                            roleIds.push("roleId="+roleId) ;
+                            console.log(roleIds)
+                        })
+                        let userId = rowData.id ;
+                        let userRoleIds = roleIds.join("&") ;
+                        console.log(userRoleIds)
+                        $.post(cxt + "/role/setRole.do?userId="+userId+"&"+userRoleIds,function (rs) {
+                            if (rs.code!=200){
+                                layer.msg(rs.msg) ;// 展示业务消息
+                                return ;
+                            }
+                            layer.msg(rs.msg) ;
+                            layer.close(index) // 关闭弹层
+                            $("#searchBtn").click() ;
+                        })
+                    })
+                },
+                yes:function (index,layero) {
+                    $("#subBtn").click() ;
+                },
+                btn:["确定","取消"],
+                btnAlign:'c'
+            }
+            layer.open(layerIns) ;
+        }
+
     })
 </script>

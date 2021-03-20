@@ -52,7 +52,7 @@
         <button class="layui-btn layui-btn-sm layui-btn-warm" lay-event="edit">
             <i class="layui-icon layui-icon-edit"></i>修改
         </button>
-        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="add">
+        <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="">
             <i class="layui-icon layui-icon-user"></i>设置权限
         </button>
     </script>
@@ -220,6 +220,7 @@
             }
             layer.open(layerIns) ;
         }
+
 
     })
 </script>
